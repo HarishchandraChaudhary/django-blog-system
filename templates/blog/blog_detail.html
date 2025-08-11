@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ blog_post.title }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <img src="{{ blog_post.image.url }}" class="img-fluid rounded mb-4" alt="{{ blog_post.title }}">
+      <span class="badge bg-primary">{{ blog_post.category.name }}</span>
+      <h1 class="mt-2">{{ blog_post.title }}</h1>
+      <p class="text-muted">By Dr. {{ blog_post.author.get_full_name|default:blog_post.author.username }}
+        &nbsp;·&nbsp; {{ blog_post.created_at|date:"M d, Y" }}</p>
+      <hr>
+      <p>{{ blog_post.content|linebreaks }}</p>
+      <hr>
+      <h5 class="mb-3">Related Posts</h5>
+      <div class="row">
+        {% for p in related_posts %}
+        <div class="col-md-4 mb-3">
+          <a href="{{ p.get_absolute_url }}" class="card h-100 text-decoration-none">
+            <img src="{{ p.image.url }}" class="card-img-top blog-img" alt="{{ p.title }}">
+            <div class="card-body"><small>{{ p.title }}</small></div>
+          </a>
+        </div>
+        {% empty %}
+          <p>No related posts.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ blog_post|default_if_none:"Create" }} Blog{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">{{ blog_post|default_if_none:"Create New" }} Blog Post</h4>
+        </div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+              <div class="mb-3">
+                {{ field.label_tag }}{{ field }}
+                <div class="text-danger small">{{ field.errors }}</div>
+              </div>
+            {% endfor %}
+            <div class="text-end">
+              <a href="{% url 'dashboard' %}" class="btn btn-secondary me-2">Cancel</a>
+              <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

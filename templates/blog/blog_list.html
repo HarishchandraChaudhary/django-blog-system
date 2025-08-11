@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}All Blogs{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+ <div class="row">
+  <!-- sidebar -->
+  <div class="col-lg-3 mb-4">
+   <div class="card p-3">
+    <form>
+      <input type="text" name="search" value="{{ search_query }}" class="form-control mb-3"
+             placeholder="Search…">
+      <select name="category" class="form-select mb-3">
+        <option value="">All Categories</option>
+        {% for c in categories %}
+          <option value="{{ c.id }}" {% if selected_category == c.id|stringformat:'s' %}selected{% endif %}>
+            {{ c.name }}
+          </option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-primary w-100">Filter</button>
+    </form>
+   </div>
+  </div>
+  <!-- grid -->
+  <div class="col-lg-9">
+   <div class="row">
+    {% for post in page_obj %}
+     <div class="col-md-6 col-xl-4 mb-4">
+      <div class="card h-100">
+       <div class="position-relative">
+        <img src="{{ post.image.url }}" class="card-img-top blog-img" alt="{{ post.title }}">
+        <span class="badge bg-primary cat-badge">{{ post.category.name }}</span>
+       </div>
+       <div class="card-body d-flex flex-column">
+        <h6 class="fw-semibold">{{ post.title }}</h6>
+        <p class="text-muted">{{ post.truncated_summary }}</p>
+        <a href="{{ post.get_absolute_url }}" class="btn btn-outline-primary mt-auto btn-sm">Read More</a>
+       </div>
+      </div>
+     </div>
+    {% empty %}
+     <p class="text-center">No posts found.</p>
+    {% endfor %}
+   </div>
+
+   <!-- pagination -->
+   {% if page_obj.has_other_pages %}
+   <nav>
+    <ul class="pagination justify-content-center">
+     {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link"
+         href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Prev</a></li>
+     {% endif %}
+     {% for n in page_obj.paginator.page_range %}
+       {% if page_obj.number == n %}
+        <li class="page-item active"><span class="page-link">{{ n }}</span></li>
+       {% elif n > page_obj.number|add:'-3' and n < page_obj.number|add:'3' %}
+        <li class="page-item"><a class="page-link"
+           href="?page={{ n }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">{{ n }}</a></li>
+       {% endif %}
+     {% endfor %}
+     {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link"
+         href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a></li>
+     {% endif %}
+    </ul>
+   </nav>
+   {% endif %}
+  </div>
+ </div>
+</div>
+{% endblock %}

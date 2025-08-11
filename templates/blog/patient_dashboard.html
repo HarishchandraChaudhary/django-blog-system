@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Patient Dashboard{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h2 class="mb-4">Browse Posts by Category</h2>
+  <div class="row">
+    {% for cat in categories %}
+      <div class="col-md-3 mb-4">
+        <a href="{% url 'category_posts' cat.id %}" class="card h-100 text-decoration-none">
+          <div class="card-body">
+            <h5 class="card-title">{{ cat.name }}</h5>
+            <p class="text-muted">{{ cat.description|truncatewords:15 }}</p>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
